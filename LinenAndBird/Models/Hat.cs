@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LinenAndBird.Models
+namespace LinenAndBird.Models // Models are a representation of your data in C#.
 {
     public class Hat
     {
@@ -19,3 +19,6 @@ namespace LinenAndBird.Models
         WideBrim
     }
 }
+
+// Functionally, they are just classes with nothing but properties in them.
+// You'll also hear people call these classes with only properties "POCOs" for Plain Old C# Object

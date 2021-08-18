@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 namespace LinenAndBird.Controllers
 {
     [Route("api/hats")] //exposed at this endpoint
-    [ApiController] // an api controller, so it returns json or xml
-    public class HatsController : ControllerBase
+    [ApiController] // an api controller, so it returns json or xml; This attribute indicates that the controller responds to web API requests. 
+    public class HatsController : ControllerBase // A base class for an MVC controller without view support.
     {
         static List<Hat> _hats = new List<Hat>
             {
@@ -34,7 +34,7 @@ namespace LinenAndBird.Controllers
                 }
             };
 
-        [HttpGet]
+        [HttpGet] // attributes can be used to configure the behavior of web API controllers and action methods.
         public List<Hat> GetAllHats()
         {
             return _hats;
@@ -57,3 +57,8 @@ namespace LinenAndBird.Controllers
 
     }
 }
+
+// Controllers, in a general sense, are classes that have the specific purpose of processing an incoming request,
+// calling any additional logic, and returning a response to that request.
+// You can think of Controllers as an "orchestration layer" that will be responsible for
+// accessing code in other parts of your application and handling the result of that code.
