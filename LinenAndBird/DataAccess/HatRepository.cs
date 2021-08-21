@@ -12,37 +12,47 @@ namespace LinenAndBird.DataAccess
             {
                 new Hat
                 {
+                    Id = Guid.NewGuid(),
                     Color = "Blue",
                     Designer = "Charlie",
                     Style = HatStyle.OpenBack
                 },
                 new Hat
                 {
+                    Id = Guid.NewGuid(),
                     Color = "Black",
                     Designer = "Nathan",
                     Style = HatStyle.WideBrim
                 },
                 new Hat
                 {
+                    Id = Guid.NewGuid(),
                     Color = "Magenta",
                     Designer = "Charlie",
                     Style = HatStyle.Normal
                 }
             };
 
+        internal Hat GetById(Guid hatId)
+        {
+            return _hats.FirstOrDefault(hat => hat.Id == hatId);
+        }
+
         internal List<Hat> GetAll()
         {
             return _hats;
         }
 
-        internal void Add(Hat newHat)
-        {
-            throw new NotImplementedException();
-        }
-        // keep controllers thin; do the work here.
         internal IEnumerable<Hat> GetByStyle(HatStyle style)
         {
             return _hats.Where(hat => hat.Style == style);
+        }
+
+        internal void Add(Hat newHat)
+        {
+            newHat.Id = Guid.NewGuid();
+
+            _hats.Add(newHat);
         }
     }
 }

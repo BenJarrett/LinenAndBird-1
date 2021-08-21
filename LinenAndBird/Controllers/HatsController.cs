@@ -22,8 +22,7 @@ namespace LinenAndBird.Controllers
         [HttpGet] // attributes can be used to configure the behavior of web API controllers and action methods.
         public List<Hat> GetAllHats()
         {
-            var repo = new HatRepository();
-            return repo.GetAll();
+            return _repo.GetAll();
         }
 
         // GET /api/hats/styles/1 -> all open backed hats
@@ -37,8 +36,7 @@ namespace LinenAndBird.Controllers
         [HttpPost]
         public void AddAHat(Hat newHat)
         {
-            var repo = new HatRepository();
-            repo.Add(newHat);
+            _repo.Add(newHat);
         }
 
     }
