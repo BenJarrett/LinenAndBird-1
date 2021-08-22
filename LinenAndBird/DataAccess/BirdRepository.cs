@@ -28,7 +28,7 @@ namespace LinenAndBird.DataAccess
 
         internal void Add(Bird newBird)
         {
-            newBird.Id = Guid.NewGuid();
+            newBird.Id = Guid.NewGuid(); // guid = globally unique identifier. akin to a firebasekey
 
             _birds.Add(newBird);
         }
@@ -38,4 +38,6 @@ namespace LinenAndBird.DataAccess
             return _birds.FirstOrDefault(bird => bird.Id == birdId);
         }
     }
-}
+}// guid inheritance: object -> valuetype -> guid
+// A GUID is a 128-bit integer (16 bytes) that can be used across all computers and networks wherever a unique identifier is required.
+// very low probability of being duplicated.

@@ -12,7 +12,7 @@ namespace LinenAndBird.DataAccess
 
         internal void Add(Order order)
         {
-            order.Id = Guid.NewGuid();
+            order.Id = Guid.NewGuid(); // for a unique identifier
 
             _orders.Add(order);
         }
