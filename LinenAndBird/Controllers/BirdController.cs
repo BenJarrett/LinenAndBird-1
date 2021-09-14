@@ -1,6 +1,7 @@
 ﻿using LinenAndBird.DataAccess;
 using LinenAndBird.Models;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 
 namespace LinenAndBird.Controllers
@@ -20,6 +21,19 @@ namespace LinenAndBird.Controllers
         public IActionResult GetAllBirds()
         {
             return Ok(_repo.GetAll());
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetBirdById(Guid id)
+        {
+            var bird = _repo.GetById(id);
+
+            if (bird == null)
+            {
+                return NotFound($"No bird with the id {id} was found.");
+            }
+
+            return Ok(bird);
         }
 
         [HttpPost]

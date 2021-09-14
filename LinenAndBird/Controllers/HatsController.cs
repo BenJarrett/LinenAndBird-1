@@ -15,11 +15,14 @@ namespace LinenAndBird.Controllers
     public class HatsController : ControllerBase // A base class for an MVC controller without view support.
     {
         HatRepository _repo; // field has type + name
+
         public HatsController()
         {
             _repo = new HatRepository();
         }
+
         [HttpGet] // attributes can be used to configure the behavior of web API controllers and action methods.
+
         public List<Hat> GetAllHats()
         {
             return _repo.GetAll();
