@@ -24,7 +24,6 @@ namespace LinenAndBird.Controllers
             _orderRepository = new OrdersRepository();
         }
 
-
         [HttpPost]
         public IActionResult CreateOrder(CreateOrderCommand command)
         {
@@ -47,6 +46,26 @@ namespace LinenAndBird.Controllers
             _orderRepository.Add(order);
 
             return Created($"/api/orders/{order.Id}", order);
+        }
+
+        [HttpGet]
+        public IActionResult GetAllOrders()
+        {
+            return Ok(_orderRepository.GetAll());
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetOrderById(Guid id)
+        {
+            Order order = _orderRepository.Get(id);
+
+            if (order == null)
+            {
+                return NotFound("No order exists with that id");
+            }
+
+            return Ok(order);
+
         }
     }
 }
