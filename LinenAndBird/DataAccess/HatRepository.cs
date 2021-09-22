@@ -3,6 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
+using Dapper;
+using Microsoft.Extensions.Configuration;
 
 namespace LinenAndBird.DataAccess
 {
@@ -33,9 +36,33 @@ namespace LinenAndBird.DataAccess
                 }
             };
 
-        internal Hat GetById(Guid hatId)
+        string _connectionString;
+
+        public HatRepository(IConfiguration config)
         {
-            return _hats.FirstOrDefault(hat => hat.Id == hatId);
+            _connectionString = config.GetConnectionString("LinenAndBird");
+        }
+
+        internal Hat GetById(Guid id)
+        {
+            //create connection 
+            using var db = new SqlConnection(_connectionString);
+
+            var hat = db.QueryFirstOrDefault<Hat>("Select * from Hats where Id = @id", new { id });
+
+            /*for parameters this is what dapper is doing internally, basically:
+             *
+             *for each property on the parameter object
+             *
+             * add a parameter with value to the sql command
+             *
+             *end for each
+             *
+             * execute the command
+             *
+             */
+
+            return hat;
         }
 
         internal List<Hat> GetAll()

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Dapper;
+using Microsoft.Extensions.Configuration;
 
 namespace LinenAndBird.DataAccess
 {
@@ -13,12 +14,31 @@ namespace LinenAndBird.DataAccess
         // use 'Using Microsoft.Data.SqlClient;' up above first
         // must have a connection to the database if you want to use ado.net:
         // use connectionstrings.com/sql-server/ for documentation
-        const string _connectionString = "Server=localhost;Database=LinenAndBird;Trusted_Connection=True;";
+        readonly string _connectionString;
+
+        // http request => IConfiguration => BirdRepository => BirdController
+
+        //this is asking asp.net for the application configuration
+        public BirdRepository(IConfiguration config)
+        {
+            _connectionString = config.GetConnectionString("LinenAndBird");
+        }
+
         internal IEnumerable<Bird> GetAll()
         {
+            //many-to-many relationship
+            //using 2 queries to get all the birds and their accessories
             // Dapper way:
             using var db = new SqlConnection(_connectionString);
             var birds = db.Query<Bird>(@"Select * From Birds");
+
+            var accessorySql = @"Select * From BirdAccessories";
+            var accessories = db.Query<BirdAccessory>(accessorySql);
+
+            foreach (var bird in birds)
+            {
+                bird.Accessories = accessories.Where(accessory => accessory.BirdId == bird.Id);
+            }
 
             return birds;
 
@@ -176,10 +196,17 @@ namespace LinenAndBird.DataAccess
 
         internal Bird GetById(Guid birdId)
         {
+            //one-to-many relationships with two separate queries
             // Dapper way:
             using var db = new SqlConnection(_connectionString);
-            var sql = @"Select * From Birds where id = @id";
-            var bird = db.QuerySingleOrDefault<Bird>(sql, new { id = birdId }); //new { type = property}
+            var birdsql = @"Select * From Birds where id = @id";
+            var bird = db.QuerySingleOrDefault<Bird>(birdsql, new { id = birdId }); //new { type = property}
+            if (bird == null) return null;
+            var accessorysql = @"Select *
+                                from Birds
+                                where id = @id";
+            var accessories = db.Query<BirdAccessory>(accessorysql, new { birdId });
+            bird.Accessories = accessories;
             return bird;
 
             // ADO way:

@@ -11,6 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using LinenAndBird.DataAccess;
 
 namespace LinenAndBird
 {
@@ -26,6 +27,15 @@ namespace LinenAndBird
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //registering a service = telling asp.net how to build a thing
+            //services.AddTransient<IConfiguration>() -> create a new thing anytime someone asks for one
+            //services.AddScoped<IConfiguration>() -> create a new thing once per http request
+            services.AddSingleton<IConfiguration>(Configuration); // -> any time someone asks for this thing, give them the same copy.  forever.  until the application stops
+
+            //we're going to register every repository as a transient
+            services.AddTransient<BirdRepository>(); // -> create a new thing anytime someone asks for one
+            services.AddTransient<OrdersRepository>(); // -> create a new thing anytime someone asks for one
+            services.AddTransient<HatRepository>(); // -> create a new thing anytime someone asks for one
 
             services.AddControllers();
             services.AddSwaggerGen(c =>

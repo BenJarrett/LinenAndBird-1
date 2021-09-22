@@ -12,9 +12,11 @@ namespace LinenAndBird.Controllers
     {
         BirdRepository _repo;
 
-        public BirdController()
+        //this is asking asp.net for a bird repo
+        //this is known as Dependency Injection
+        public BirdController(BirdRepository repo)
         {
-            _repo = new BirdRepository();
+            _repo = repo;
         }
 
         [HttpGet]
@@ -48,7 +50,7 @@ namespace LinenAndBird.Controllers
 
             return Created("/api/birds/1", newBird);
         }
-        
+
         //api/birds/{id}
         [HttpDelete("{id}")]
         public IActionResult DeleteBird(Guid id)
