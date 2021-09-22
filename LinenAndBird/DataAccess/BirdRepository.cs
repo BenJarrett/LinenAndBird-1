@@ -178,8 +178,14 @@ namespace LinenAndBird.DataAccess
         {
             // Dapper way:
             using var db = new SqlConnection(_connectionString);
-            var sql = @"Select * From Birds where id = @id";
-            var bird = db.QuerySingleOrDefault<Bird>(sql, new { id = birdId }); //new { type = property}
+            var birdsql = @"Select * From Birds where id = @id";
+            var bird = db.QuerySingleOrDefault<Bird>(birdsql, new { id = birdId }); //new { type = property}
+            if (bird == null) return null;
+            var accessorysql = @"Select *
+                                from Birds
+                                where id = @id";
+            var accessories = db.Query<BirdAccessory>(accessorysql, new { birdId });
+            bird.Accessories = accessories;
             return bird;
 
             // ADO way:

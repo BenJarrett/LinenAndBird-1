@@ -14,9 +14,15 @@ namespace LinenAndBird.Models
         public string Size { get; set; }
         public string Name { get; set; }
 
-        public List<string> Accessories { get; set; }
+        public IEnumerable<BirdAccessory> Accessories { get; set; }
     }
 
+    public class BirdAccessory
+    {
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public Guid BirdId { get; set; }
+    }
     public enum BirdType
     {
         Dead,

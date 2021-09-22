@@ -21,3 +21,12 @@ from birds b
 --	Type = @type,
 --	Size = @size,
 ----Where Id = @id
+
+--give me birds with accessories
+--select *
+--from birds b
+--	left join BirdAccessories ba
+--	on b.Id = ba.BirdId
+
+--select *
+--from BirdAccessories

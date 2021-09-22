@@ -31,7 +31,7 @@ namespace LinenAndBird.DataAccess
             //last argument tells c# that it all belongs to the Order object
             var results = db.Query<Order, Bird, Hat, Order>(sql, (order, bird, hat) =>
             {
-                order.Bird = bird; //orbder.Bird will equal the bird object we created from the sql
+                order.Bird = bird; //order.Bird will equal the bird object we created from the sql
                 order.Hat = hat;   //order.Hat will equal the hat object we created from the sql 
                 return order;
             }, splitOn: "Id"); //the default value, but explicitly writing it so that we know about it -- tells which columns to split the sql data by so each chunk can map into our objects
