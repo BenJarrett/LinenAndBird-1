@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Dapper;
+using Microsoft.Extensions.Configuration;
 
 namespace LinenAndBird.DataAccess
 {
@@ -34,7 +35,13 @@ namespace LinenAndBird.DataAccess
                     Style = HatStyle.Normal
                 }
             };
-        const string _connectionString = "Server=localhost;Database=LinenAndBird;Trusted_Connection=True;";
+
+        string _connectionString;
+
+        public HatRepository(IConfiguration config)
+        {
+            _connectionString = config.GetConnectionString("LinenAndBird");
+        }
 
         internal Hat GetById(Guid id)
         {

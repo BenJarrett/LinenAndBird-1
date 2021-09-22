@@ -3,18 +3,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-// add these two using statements below
 using Microsoft.Data.SqlClient;
 using Dapper;
+using Microsoft.Extensions.Configuration;
 
 namespace LinenAndBird.DataAccess
 {
     public class OrdersRepository
     {
-        const string _connectionString = "Server=localhost; Database=LinenAndBird; Trusted_Connection=true;";
-        //static List<Order> _orders = new List<Order>();
-
-        //return a collection of things
+        string _connectionString;
+        //this is asking asp.net for the application configuration 
+        public OrdersRepository(IConfiguration config)
+        {
+            _connectionString = config.GetConnectionString("LinenAndBird");
+        }
         internal IEnumerable<Order> GetAll()
         {
             //create a connection
