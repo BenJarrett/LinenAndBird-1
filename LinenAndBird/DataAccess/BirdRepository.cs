@@ -11,7 +11,7 @@ namespace LinenAndBird.DataAccess
 {
     public class BirdRepository
     {
-        // Yay //
+        
         // use 'Using Microsoft.Data.SqlClient;' up above first
         // must have a connection to the database if you want to use ado.net:
         // use connectionstrings.com/sql-server/ for documentation
