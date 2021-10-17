@@ -5,13 +5,11 @@ using System.Threading.Tasks;
 
 namespace LinenAndBird.Models
 {
-    public class Order
+    public class CreateOrderCommand
     {
-        public Guid Id { get; set; }
-
-        public Bird Bird { get; set; }
-        public Hat Hat { get; set; }
-
+        public Guid BirdId { get; set; }
+        public Guid HatId { get; set; }
         public double Price { get; set; }
+
     }
 }

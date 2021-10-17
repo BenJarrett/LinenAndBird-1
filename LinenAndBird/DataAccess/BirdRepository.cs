@@ -13,6 +13,7 @@ namespace LinenAndBird.DataAccess
         {
             new Bird
             {
+                Id = Guid.NewGuid(),
                 Name = "Jimmy",
                 Color = "Red",
                 Size = "Small",
@@ -29,7 +30,14 @@ namespace LinenAndBird.DataAccess
 
         internal void Add(Bird newBird)
         {
+            newBird.Id = Guid.NewGuid();
+
             _birds.Add(newBird);
+        }
+
+        internal Bird GetById(Guid birdId)
+        {
+            return _birds.FirstOrDefault(bird => bird.Id == birdId);
         }
     }
 }
