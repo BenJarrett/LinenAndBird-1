@@ -49,7 +49,39 @@ namespace LinenAndBird.Controllers
 
             _repo.Add(newBird);
 
-            return Created("/api/birds/1", newBird);
+            return Created($"/api/birds/{newBird.Id}", newBird); // The location of the new bird that is created //
+        }
+
+        // api/birds/{id}
+        [HttpDelete("{id}")]
+        public IActionResult DeleteBird(Guid id)
+        {
+            _repo.Remove(id);
+
+            return Ok("Successfully Deleted Bird from Database");
+        }
+
+        // api/birds/{id}
+        [HttpPut("{id}")]
+        public IActionResult UpdateBird(Guid id, Bird bird)
+        {
+            var birdToUpdate = _repo.GetById(id);
+
+            if (birdToUpdate == null)
+            {
+                return NotFound($"Could not find bird with the Id {id} for updating");
+            }
+
+            var updatedBird = _repo.Update(id, bird);
+
+            return Ok(updatedBird);
+
         }
     }
 }
+
+// LIST OF ADO.NET STEPS //
+// 1. - Create and open a connection 
+// 2. - Create command and set command text and, if applicable, set parameters
+// 3. - Execute that command As reader, scaler, or not query. If you care about that data, you have to map that data from the relational side of things to the object side of things. Relational to C# objects. Usually in a While Loop or an If Statement // 
+// 4. - Then return the results //
