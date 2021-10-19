@@ -11,7 +11,7 @@ namespace LinenAndBird.DataAccess
     public class BirdRepository
     {
         // Taking the string whiich is used for each method and declaring it as a variable for easier use and if we ever have to change it, we only have to change it in one place //
-        const string _connectionString = ("Server=localhost;Database=LinenAndBird;Trusted_Connection=True;");
+        const string _connectionString = "Server=localhost;Database=LinenAndBird;Trusted_Connection=True;";
 
 
         internal IEnumerable<Bird> GetAll()
