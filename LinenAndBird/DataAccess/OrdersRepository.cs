@@ -5,16 +5,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Dapper;
-
+using Microsoft.Extensions.Configuration;
 
 namespace LinenAndBird.DataAccess
 {
     public class OrdersRepository
     {
-        //static List<Order> _orders = new List<Order>();
+        readonly string _connectionString;
 
-        const string _connectionString = "Server=localhost;Database=LinenAndBird;Trusted_Connection=True;";
-
+        public OrdersRepository(IConfiguration config)
+        {
+            _connectionString = config.GetConnectionString("LinenAndBird");
+        }
         internal void Add(Order order)
         {
             

@@ -1,11 +1,8 @@
 ﻿using LinenAndBird.DataAccess;
 using LinenAndBird.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace LinenAndBird.Controllers
 {
@@ -15,10 +12,13 @@ namespace LinenAndBird.Controllers
     {
         BirdRepository _repo;
 
-        public BirdController()
+        // DEPENDENCY INJECTION //
+        public BirdController(BirdRepository repo) // This is asking asp.net for the application congiuration // In order to construct this controller, you must supply us with a configuration // 
         {
-            _repo = new BirdRepository();
+            _repo = repo;
         }
+
+        // DEPENDENCY INJECTION //
 
         [HttpGet]
         public IActionResult GetAllBirds()

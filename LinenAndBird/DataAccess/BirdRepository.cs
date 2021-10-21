@@ -5,15 +5,29 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Dapper;
+using Microsoft.Extensions.Configuration;
+
+
+// IEnumerable is for looping over only
+// IList is for adding and removing
+// all about permissions
+
 
 namespace LinenAndBird.DataAccess
 {
     public class BirdRepository
     {
+
+        // http request => Create Iconfiguration => Create BirdRepository => Create BirdController //
         // Taking the string whiich is used for each method and declaring it as a variable for easier use and if we ever have to change it, we only have to change it in one place //
-        const string _connectionString = "Server=localhost;Database=LinenAndBird;Trusted_Connection=True;";
+        readonly string _connectionString;
 
+        public BirdRepository(IConfiguration config)
+        {
+            _connectionString = config.GetConnectionString("LinenAndBird");
+        }
 
+        // USING 2 QUERIES TO GET THE BIRDS AND THEIR ACCESSORIES //
         internal IEnumerable<Bird> GetAll()
         {
             // connections are like the tunnel between our app and the database //
@@ -26,8 +40,28 @@ namespace LinenAndBird.DataAccess
             // This one line says the same thing as setting up a Command, setting it up as Reader, looping over it, mapping it into a bird shaped thing and adding it to the list //
             // Dapper opens and closes the connection for you //
             // It looks at the results that came back from SQL, and see's all the fields and looks for in the Type class, in this case Bird, for matching Properties and it moves those fields into those mathcing properties for you. Given they match, Dapper will figure it our and create instances with this Type with property filled out stuff //
+            // Getting all the Birds //
+
              var birds = db.Query<Bird>(@"Select *
                                           From Birds");
+
+
+            
+            // let's get the accessories for each bird //
+
+            var accessorySql = @"Select *
+                                 From BirdAccessories";
+
+            var accessories = db.Query<BirdAccessory>(accessorySql);
+
+            // Now let's join those two queries //
+
+            // For each bird in our collections of birds, set that bird's accessories equal to from the entire list of accessories those accessories that have the same birdId //
+            foreach (var bird in birds)
+            {
+                bird.Accessories = accessories.Where(accessory => accessory.BirdId == bird.Id);
+            }
+            
 
             return birds;
 
@@ -209,61 +243,28 @@ namespace LinenAndBird.DataAccess
 
         internal Bird GetById(Guid birdId)
         {
-            // connections are like the tunnel between our app and the database //
-            // USING // This closes the open connection when the logic in the "GetAll()" method is executed //
-            using var db = new SqlConnection(_connectionString);
-            // connections aren't open by default, we've gotta do that ourself
-            //connection.Open();
 
-            // DAPPER WITH PERAMETERZATION //
-            var sql = @"Select *
+            // ONE TO MANY RELATIONSHIPS USING 2 SEPERATE QUERIES //
+            using var db = new SqlConnection(_connectionString);
+            var birdSql = @"Select *
                         From Birds
                         where id = @id";
+            
+            var bird = db.QuerySingleOrDefault<Bird>(birdSql, new { id = birdId });
 
-            // passed in your Sql command, creating a new object(annonymous type), but real types can be used as well, that the property id is equal to the birdId value of that property //
-            // This one line has replaced everything to line 213 //
-            var bird = db.QueryFirst<Bird>(sql, new { id = birdId });
-            // OR //
-            //var bird = db.QuerySingle<Bird>(sql, new { id  = birdId });
+            if (bird == null) return null;
+
+            // Let's get the eaccessories for the bird //
+            var accessorySql = @"Select *
+                                 From BirdAccessories
+                                 where birdid = @birdId";
+
+            var accessories = db.Query<BirdAccessory>(accessorySql, new { birdId });
+
+            bird.Accessories = accessories;
 
             return bird;
-            // DAPPER WITH PERAMETERZATION //
 
-            //// SQL Commands // This tells Sql what we want to do //
-            //// This Time, with Peramiterzation //
-            //// DO THIS // 
-            //// PERAMITERZATION //
-            //var command = connection.CreateCommand();
-            //command.CommandText = @"Select *
-            //                        From Birds
-            //                        where id = @id";
-
-            //// Perameterization prevents sqp injection (little bobby tables) // 
-            //command.Parameters.AddWithValue("id", birdId);
-
-            //// Executing that command against out connection //
-            //// Execute Reader // Used for when we care about getting all the results of our query //
-            //var reader = command.ExecuteReader();
-
-            //// Only return one row, so we don't need a loop. Instead we can use an If statement //
-            //if (reader.Read())
-            //{
-            //    //var bird = new Bird();
-            //    //bird.Id = reader.GetGuid(0);
-            //    //bird.Size = reader["Size"].ToString();
-            //    //bird.Type = (BirdType)reader["Type"];
-            //    //bird.Color = reader["Color"].ToString();
-            //    //bird.Name = reader["Name"].ToString();
-
-            //    //return bird;
-            //    //// If there are tows to read, then return that bird we just read //
-
-            //    // working witht he results
-            //    return MapFromReader(reader); // Refactored code aboy
-            //}
-
-            //// If there are no matching rows to read, then return null //
-            //return null;
         }
 
         // WHEN WE STARTED USING DAPPER, WE DON'T NEED THIS MAP READER FUNCTION ANYMORE //

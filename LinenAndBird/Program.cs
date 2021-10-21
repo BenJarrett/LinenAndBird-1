@@ -25,6 +25,4 @@ namespace LinenAndBird
     }
 }
 
-// IEnumerable is for looping over only
-// IList is for adding and removing
-// all about permissions
+
