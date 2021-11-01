@@ -1,11 +1,8 @@
 ﻿using LinenAndBird.DataAccess;
 using LinenAndBird.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace LinenAndBird.Controllers
 {
@@ -15,10 +12,13 @@ namespace LinenAndBird.Controllers
     {
         BirdRepository _repo;
 
-        public BirdController()
+        // DEPENDENCY INJECTION //
+        public BirdController(BirdRepository repo) // This is asking asp.net for the application congiuration // In order to construct this controller, you must supply us with a configuration // 
         {
-            _repo = new BirdRepository();
+            _repo = repo;
         }
+
+        // DEPENDENCY INJECTION //
 
         [HttpGet]
         public IActionResult GetAllBirds()
@@ -85,3 +85,29 @@ namespace LinenAndBird.Controllers
 // 2. - Create command and set command text and, if applicable, set parameters
 // 3. - Execute that command As reader, scaler, or not query. If you care about that data, you have to map that data from the relational side of things to the object side of things. Relational to C# objects. Usually in a While Loop or an If Statement // 
 // 4. - Then return the results //
+
+
+
+
+////         internal void Add(ProductOrder newProductOrder)
+//{
+//    using var db = new SqlConnection(_connectionString);
+
+//    var sql = @"INSERT INTO [dbo].[ProductOrders]
+//                                       (
+//                                         [orderId]
+//                                        ,[productId]
+//                                        ,[productQuantity]
+//	                            output inserted.Id
+//                                 VALUES
+//		                            (@orderId, @productId, @productId)";
+
+//    var parameters = new
+//    {
+//        //TotalCost = newOrder.TotalCost,
+//        // Completed = newOrder.Completed,
+//        OrderId = newProductOrder.OrderId,
+//        ProductId = newProductOrder.ProductId,
+//        ProductQuantity = newProductOrder.ProductQuantity
+
+//    };

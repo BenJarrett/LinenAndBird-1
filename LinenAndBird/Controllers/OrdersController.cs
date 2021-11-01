@@ -17,13 +17,18 @@ namespace LinenAndBird.Controllers
         HatRepository _hatRepository;
         OrdersRepository _orderRepository;
 
-        public OrdersController()
+        public OrdersController(BirdRepository birdRepo, OrdersRepository orderRepo, HatRepository hatRepo)
         {
-            _birdRepository = new BirdRepository();
-            _hatRepository = new HatRepository();
-            _orderRepository = new OrdersRepository();
+            _birdRepository = birdRepo;
+            _hatRepository = hatRepo;
+            _orderRepository = orderRepo;
         }
 
+        [HttpGet]
+        public IActionResult GetAllOrders()
+        {
+            return Ok(_orderRepository.GetAll());
+        }
 
         [HttpPost]
         public IActionResult CreateOrder(CreateOrderCommand command)
@@ -47,6 +52,20 @@ namespace LinenAndBird.Controllers
             _orderRepository.Add(order);
 
             return Created($"/api/orders/{order.Id}", order);
+        }
+
+        [HttpGet("{id}")]
+        public IActionResult GetOrderById(Guid id)
+        {
+
+            Order order = _orderRepository.Get(id);
+
+            if (order == null)
+            {
+                return NotFound("No order exists with that id");
+            }
+
+            return Ok(order);
         }
     }
 }
